@@ -62,7 +62,6 @@ authorized_capdeploy_key:
   file.append:
     - name: /home/akita/.ssh/authorized_keys
     - text: {{ salt.pillar.get('akita:deploy_keys:akita_capdeploy_local_key') }}
-    - group: akita
     - require:
       - user: akita
 
@@ -131,6 +130,7 @@ node_requirements:
 install-mailcatcher:
   cmd.run:
    - name: chruby-exec {{ ruby_ver }} -- gem install mailcatcher
+   - unless: chruby-exec {{ ruby_ver }} -- mailcatcher --help
    - user: root
    - require:
      - pkg: chruby

@@ -1,0 +1,5 @@
+akita:
+
+  versions:
+    ruby: 2.2.2
+    nodejs: 0.12.12-1nodesource1~trusty1
