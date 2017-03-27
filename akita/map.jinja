@@ -1,0 +1,42 @@
+{% set props = salt['grains.filter_by'](
+{
+  'default':{
+    'rails_env': 'development',
+    'ned_service': 'http://localhost:8080/v1/',
+    'cas_url': 'https://localhost:8093',
+    'mailer_address': 'localhost',
+    'mailer_port': '1025',
+    'salesforce_host': 'test.salesforce.com',
+    'salesforce_user': 'integrationuser@plos.org.plostest2'
+  },
+  'vagrant': {
+    'ned_service': 'http://ned.vagrant.local:8080/v1/',
+    'cas_url': 'http://nedcas.vagrant.local:8080'
+  },
+  'dev': {
+    'ned_service': 'http://ned-201.sfo.plos.org:8080/v1/',
+    'cas_url': 'https://nedcas-dev.plos.org'
+  },
+  'qa': {
+    'rails_env': 'integration',
+    'ned_service': 'http://ned-301.sfo.plos.org:8080/v1/',
+    'cas_url': 'https://nedcas-qa.plos.org'
+  },
+  'stage': {
+    'rails_env': 'integration',
+    'ned_service': 'http://ned-401.soma.plos.org:8080/v1/',
+    'cas_url': 'https://nedcas-stage.plos.org',
+    'mailer_address': 'plos-org.mail.protection.outlook.com',
+    'mailer_port': '25'
+  },
+  'prod': {
+    'rails_env': 'production',
+    'ned_service': 'http://ned.soma.plos.org/v1',
+    'cas_url': 'https://register.plos.org',
+    'mailer_address': 'plos-org.mail.protection.outlook.com',
+    'mailer_port': '25',
+    'salesforce_host': 'login.salesforce.com',
+    'salesforce_user': 'akitaintegration@plos.org'
+  }
+}
+, grain='environment', base='default') %}

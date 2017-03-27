@@ -1,0 +1,4 @@
+#this file is managed by salt local changes will be overwritten
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
