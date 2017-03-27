@@ -125,6 +125,13 @@ node_requirements:
     - require:
        - user: akita
 
+/usr/local/bin/rake:
+  file.symlink:
+    - target: /opt/rubies/ruby-{{ ruby_ver }}/bin/rake
+    - force: True
+    - require:
+      - pkg: plos-ruby
+
 {% if grains['environment'] in ['vagrant', 'dev', 'qa'] %}
 
 install-mailcatcher:
