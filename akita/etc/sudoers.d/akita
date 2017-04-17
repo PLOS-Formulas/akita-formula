@@ -4,8 +4,7 @@
 
 Cmnd_Alias AKITA = /bin/mv /tmp/nginx_akita-nginx.conf /etc/nginx/sites-available/akita-nginx.conf, /bin/ln -fs /etc/nginx/sites-available/akita-nginx.conf /etc/nginx/sites-enabled/akita-nginx.conf, /etc/init.d/nginx reload, /bin/mv /tmp/akita-upstart.conf /etc/init/akita.conf, /usr/sbin/service akita restart
 
-Cmnd_Alias RAKE = /usr/local/bin/rake
-
 akita ALL = (root) NOPASSWD: AKITA
 
-%akitadevs ALL = (akita) NOPASSWD: RAKE
+# allow to become akita user like so $ sudo -u akita -i
+%akitadevs ALL = (akita) NOPASSWD: /bin/bash
