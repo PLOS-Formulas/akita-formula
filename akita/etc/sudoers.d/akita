@@ -8,4 +8,5 @@ Cmnd_Alias RAKE = /usr/local/bin/rake
 
 akita ALL = (root) NOPASSWD: AKITA
 
-%akitadevs ALL = (akita) NOPASSWD: RAKE
+# allow to become akita user like so $ sudo -u akita -s
+%akitadevs ALL = (akita) NOPASSWD: /bin/bash
