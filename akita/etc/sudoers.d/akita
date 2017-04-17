@@ -6,5 +6,5 @@ Cmnd_Alias AKITA = /bin/mv /tmp/nginx_akita-nginx.conf /etc/nginx/sites-availabl
 
 akita ALL = (root) NOPASSWD: AKITA
 
-# allow to become akita user like so $ sudo -u akita -s
+# allow to become akita user like so $ sudo -u akita -i
 %akitadevs ALL = (akita) NOPASSWD: /bin/bash
