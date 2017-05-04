@@ -136,8 +136,9 @@ node_requirements:
       - pkg: plos-ruby
 
 {% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
-akita:
+akita_restart_for_configs:
   service.running:
+    - name: akita
     - watch:
       - file: /home/akita/.bashrc
 {% endif %}
