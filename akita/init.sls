@@ -6,17 +6,10 @@
 
 include:
   - nginx
-  - common.repos
-  - akita.hosts
   - common.packages
   - common.repos
-
-plos-ruby:
-  pkg.installed:
-    - name: plos-ruby-{{ ruby_ver }}
-
-chruby:
-  pkg.installed
+  - akita.ruby
+  - akita.hosts
 
 akita-install-bundler:
   cmd.run:
@@ -27,28 +20,27 @@ akita-install-bundler:
     - group: akita
     - require:
       - user: akita
-      - pkg: chruby
       - pkg: plos-ruby
 
 akita:
-    group:
-      - present
-      - gid: {{ salt.pillar.get('uids:akita:gid') }}
-    user:
-      - present
-      - uid: {{ salt.pillar.get('uids:akita:uid') }}
-      - gid: {{ salt.pillar.get('uids:akita:gid') }}
-      - gid_from_name: true
+  group:
+    - present
+    - gid: {{ salt.pillar.get('uids:akita:gid') }}
+  user:
+    - present
+    - uid: {{ salt.pillar.get('uids:akita:uid') }}
+    - gid: {{ salt.pillar.get('uids:akita:gid') }}
+    - gid_from_name: true
 {% if grains['fqdn'] == capdeloy_host %}
-      - groups:
-        - teamcity
+    - groups:
+      - teamcity
 {% endif %}
-      - createhome: true
-      - shell: /bin/bash
-      - require:
-        - group: akita
+    - createhome: true
+    - shell: /bin/bash
+    - require:
+      - group: akita
 {% if grains['fqdn'] == capdeloy_host %}
-        - group: teamcity
+      - group: teamcity
 {% endif %}
 
 {% if grains['environment'] in ['vagrant', 'dev'] %}
@@ -57,13 +49,13 @@ akita:
 {{ manage_authorized_keys('/home/akita/.ssh', 'akita', ssh_extra=pillar['akita']['deploy_keys'][grains['environment']]) }}
 {% endif %}
 
-# to talk from capdeploy to akita, only needed on akita box
-authorized_capdeploy_key:
-  file.append:
-    - name: /home/akita/.ssh/authorized_keys
-    - text: {{ salt.pillar.get('akita:deploy_keys:akita_capdeploy_local_key') }}
-    - require:
-      - user: akita
+# # to talk from capdeploy to akita, only needed on akita box
+# authorized_capdeploy_key:
+#   file.append:
+#     - name: /home/akita/.ssh/authorized_keys
+#     - text: {{ salt.pillar.get('akita:deploy_keys:akita_capdeploy_local_key') }}
+#     - require:
+#       - user: akita
 
 extend:
   apt-repo-plos:
@@ -74,14 +66,11 @@ extend:
 akita-apt-packages:
   pkg.installed:
     - pkgs:
-        - build-essential
-        - chruby
-        - libgmp-dev
-        - libsqlite3-dev
-        - libssl-dev
-        - nodejs
-        - plos-ruby-{{ ruby_ver }}
-        - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
+      - build-essential
+      - libgmp-dev
+      - libsqlite3-dev
+      - libssl-dev
+      - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
 
 node_requirements:
   pkg.installed:
@@ -132,28 +121,9 @@ node_requirements:
     - require:
       - pkg: plos-ruby
 
-{% if grains['environment'] in ['vagrant', 'dev', 'qa'] %}
-
-install-mailcatcher:
-  cmd.run:
-   - name: chruby-exec {{ ruby_ver }} -- gem install mailcatcher
-   - unless: chruby-exec {{ ruby_ver }} -- mailcatcher --help
-   - user: root
-   - require:
-     - pkg: chruby
-     - pkg: plos-ruby
-
-/etc/init/mailcatcher.conf:
-  file.managed:
-    - template: jinja
-    - source: salt://akita/etc/init/mailcatcher.conf.sls
-    - user: root
-    - group: root
-
-mailcatcher:
+{% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
+restart_for_akita_configs:
   service.running:
-    - enable: True
-    - require:
-      - file: /etc/init/mailcatcher.conf
-
+    - watch:
+      - file: /home/akita/.bashrc
 {% endif %}
