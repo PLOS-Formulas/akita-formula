@@ -9,7 +9,6 @@ include:
   - common.packages
   - common.repos
   - akita.ruby
-  - akita.hosts
 
 akita-install-bundler:
   cmd.run:
@@ -98,21 +97,36 @@ node_requirements:
     - template: jinja
     - source: salt://akita/etc/sudoers.d/akita
 
+/home/akita/akita-envs.sh:
+  file.managed:
+    - template: jinja
+    - name: /home/akita/akita-envs.sh
+    - source: salt://akita/home/akita/akita-envs.sh
+    - require:
+      - user: akita
+
 /home/akita/.bashrc:
   file.managed:
     - template: jinja
     - name: /home/akita/.bashrc
-    - source: salt://akita/home/akita/bashrc
     - require:
       - user: akita
+    - contents: |
+        source /usr/share/chruby/chruby.sh
+        source /usr/share/chruby/auto.sh
+        chruby {{ salt.pillar.get('akita:versions:ruby') }}
+        source akita-envs.sh
 
 /home/akita/.bash_profile:
   file.managed:
     - user: akita
     - group: akita
-    - source: salt://akita/home/akita/bash_profile
     - require:
        - user: akita
+    - contents: |
+        if [ -f ~/.bashrc ]; then
+          . ~/.bashrc
+        fi
 
 /usr/local/bin/rake:
   file.symlink:
@@ -122,7 +136,7 @@ node_requirements:
       - pkg: plos-ruby
 
 {% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
-restart_for_akita_configs:
+akita:
   service.running:
     - watch:
       - file: /home/akita/.bashrc

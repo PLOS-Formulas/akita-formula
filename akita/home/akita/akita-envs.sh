@@ -2,10 +2,6 @@
 {% from "akita/map.jinja" import props with context %}
 # this file is managed by salt local changes will be overwritten
 
-source /usr/share/chruby/chruby.sh
-source /usr/share/chruby/auto.sh
-chruby {{ salt.pillar.get('akita:versions:ruby') }}
-
 export NED_SERVICE={{ props.get('ned_service') }}
 export NED_USERAPP=akita
 export NED_PASSWORD={{ salt.pillar.get('secrets:akita:ned-password') }}
