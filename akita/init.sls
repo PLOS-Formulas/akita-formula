@@ -48,13 +48,14 @@ akita:
 {{ manage_authorized_keys('/home/akita/.ssh', 'akita', ssh_extra=pillar['akita']['deploy_keys'][grains['environment']]) }}
 {% endif %}
 
-# # to talk from capdeploy to akita, only needed on akita box
-# authorized_capdeploy_key:
-#   file.append:
-#     - name: /home/akita/.ssh/authorized_keys
-#     - text: {{ salt.pillar.get('akita:deploy_keys:akita_capdeploy_local_key') }}
-#     - require:
-#       - user: akita
+# to talk from capdeploy to akita, only needed on akita box
+# TODO: figure out how to remove this without breaking capdeply since its causing salt log noise
+authorized_capdeploy_key:
+  file.append:
+    - name: /home/akita/.ssh/authorized_keys
+    - text: {{ salt.pillar.get('akita:deploy_keys:akita_capdeploy_local_key') }}
+    - require:
+      - user: akita
 
 extend:
   apt-repo-plos:
