@@ -1,9 +1,15 @@
+{% if salt.grains.has_value('subconfig') %}
+  {{ salt.grains.setval('env_complete', grains.get('environment') + "_" + grains.get('subconfig')) }}
+{% else %}
+  {{ salt.grains.set('env_complete', grains.get('environment')) }}
+{% endif %}
+
 {% set props = salt['grains.filter_by'](
 {
   'default':{
     'rails_env': 'development',
-    'ned_service': 'http://localhost:8080/v1/',
-    'cas_url': 'https://localhost:8093',
+    'ned_service': 'http://localhost:8888/v1/',
+    'cas_url': 'https://localhost:8880',
     'mailer_address': 'localhost',
     'mailer_port': '1025',
     'salesforce_host': 'test.salesforce.com',
@@ -11,7 +17,11 @@
   },
   'vagrant': {
     'ned_service': 'http://ned.vagrant.local:8080/v1/',
-    'cas_url': 'http://nedcas.vagrant.local:8080'
+    'cas_url': 'http://nedcas.vagrant.local:8080',
+  },
+  'vagrant_nedcasakita': {
+    'ned_service': 'http://localhost:8888/v1/',
+    'cas_url': 'http://nedcasakita.vagrant.local:8880'
   },
   'dev': {
     'ned_service': 'http://ned-201.soma.plos.org:8080/v1/',
@@ -21,6 +31,11 @@
     'rails_env': 'integration',
     'ned_service': 'http://ned-301.soma.plos.org:8080/v1/',
     'cas_url': 'https://nedcas-qa.plos.org'
+  },
+  'qa_nedcasakita': {
+    'rails_env': 'integration',
+    'ned_service': 'http://localhost:8080/v1/',
+    'cas_url': 'https://nedcas-integration.plos.org'
   },
   'stage': {
     'rails_env': 'integration',
@@ -39,4 +54,4 @@
     'salesforce_user': 'akitaintegration@plos.org'
   }
 }
-, grain='environment', base='default') %}
+, grain='env_complete', base='default') %}
