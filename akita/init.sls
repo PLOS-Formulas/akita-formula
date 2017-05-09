@@ -98,15 +98,8 @@ node_requirements:
     - template: jinja
     - source: salt://akita/etc/sudoers.d/akita
 
-# /home/akita/akita-envs.sh:
-#   file.managed:
-#     - template: jinja
-#     - name: /home/akita/akita-envs.sh
-#     - source: salt://akita/home/akita/akita-envs.sh
-#     - require:
-#       - user: akita
+# NOTE: move envs to akita-envs.sh once PLT-268 is resolved
 
-# NOTE: temp workaround until PLT-268 is resolved
 /home/akita/.bashrc:
   file.managed:
     - template: jinja
@@ -114,11 +107,6 @@ node_requirements:
     - source: salt://akita/home/akita/bashrc
     - require:
       - user: akita
-    # - contents: |
-    #     source /usr/share/chruby/chruby.sh
-    #     source /usr/share/chruby/auto.sh
-    #     chruby {{ salt.pillar.get('akita:versions:ruby') }}
-    #     source akita-envs.sh
 
 /home/akita/.bash_profile:
   file.managed:
