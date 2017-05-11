@@ -6,17 +6,9 @@
 
 include:
   - nginx
-  - common.repos
-  - akita.hosts
   - common.packages
   - common.repos
-
-plos-ruby:
-  pkg.installed:
-    - name: plos-ruby-{{ ruby_ver }}
-
-chruby:
-  pkg.installed
+  - akita.ruby
 
 akita-install-bundler:
   cmd.run:
@@ -27,28 +19,27 @@ akita-install-bundler:
     - group: akita
     - require:
       - user: akita
-      - pkg: chruby
       - pkg: plos-ruby
 
 akita:
-    group:
-      - present
-      - gid: {{ salt.pillar.get('uids:akita:gid') }}
-    user:
-      - present
-      - uid: {{ salt.pillar.get('uids:akita:uid') }}
-      - gid: {{ salt.pillar.get('uids:akita:gid') }}
-      - gid_from_name: true
+  group:
+    - present
+    - gid: {{ salt.pillar.get('uids:akita:gid') }}
+  user:
+    - present
+    - uid: {{ salt.pillar.get('uids:akita:uid') }}
+    - gid: {{ salt.pillar.get('uids:akita:gid') }}
+    - gid_from_name: true
 {% if grains['fqdn'] == capdeloy_host %}
-      - groups:
-        - teamcity
+    - groups:
+      - teamcity
 {% endif %}
-      - createhome: true
-      - shell: /bin/bash
-      - require:
-        - group: akita
+    - createhome: true
+    - shell: /bin/bash
+    - require:
+      - group: akita
 {% if grains['fqdn'] == capdeloy_host %}
-        - group: teamcity
+      - group: teamcity
 {% endif %}
 
 {% if grains['environment'] in ['vagrant', 'dev'] %}
@@ -58,6 +49,7 @@ akita:
 {% endif %}
 
 # to talk from capdeploy to akita, only needed on akita box
+# TODO: figure out how to remove this without breaking capdeply since its causing salt log noise
 authorized_capdeploy_key:
   file.append:
     - name: /home/akita/.ssh/authorized_keys
@@ -74,14 +66,11 @@ extend:
 akita-apt-packages:
   pkg.installed:
     - pkgs:
-        - build-essential
-        - chruby
-        - libgmp-dev
-        - libsqlite3-dev
-        - libssl-dev
-        - nodejs
-        - plos-ruby-{{ ruby_ver }}
-        - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
+      - build-essential
+      - libgmp-dev
+      - libsqlite3-dev
+      - libssl-dev
+      - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
 
 node_requirements:
   pkg.installed:
@@ -109,6 +98,8 @@ node_requirements:
     - template: jinja
     - source: salt://akita/etc/sudoers.d/akita
 
+# NOTE: move envs to akita-envs.sh once PLT-268 is resolved
+
 /home/akita/.bashrc:
   file.managed:
     - template: jinja
@@ -121,9 +112,12 @@ node_requirements:
   file.managed:
     - user: akita
     - group: akita
-    - source: salt://akita/home/akita/bash_profile
     - require:
        - user: akita
+    - contents: |
+        if [ -f ~/.bashrc ]; then
+          . ~/.bashrc
+        fi
 
 /usr/local/bin/rake:
   file.symlink:
@@ -132,28 +126,10 @@ node_requirements:
     - require:
       - pkg: plos-ruby
 
-{% if grains['environment'] in ['vagrant', 'dev', 'qa'] %}
-
-install-mailcatcher:
-  cmd.run:
-   - name: chruby-exec {{ ruby_ver }} -- gem install mailcatcher
-   - unless: chruby-exec {{ ruby_ver }} -- mailcatcher --help
-   - user: root
-   - require:
-     - pkg: chruby
-     - pkg: plos-ruby
-
-/etc/init/mailcatcher.conf:
-  file.managed:
-    - template: jinja
-    - source: salt://akita/etc/init/mailcatcher.conf.sls
-    - user: root
-    - group: root
-
-mailcatcher:
+{% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
+akita_restart_for_configs:
   service.running:
-    - enable: True
-    - require:
-      - file: /etc/init/mailcatcher.conf
-
+    - name: akita
+    - watch:
+      - file: /home/akita/.bashrc
 {% endif %}
