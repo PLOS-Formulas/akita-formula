@@ -30,3 +30,5 @@ export SALESFORCE_CONSUMER_PASSWORD={{ salt.pillar.get('secrets:akita:salesforce
 export SALESFORCE_IMPORT_NOTIFY_TO=edboardmgmt@plos.org
 
 export MOODLE_TOKEN={{ salt.pillar.get('secrets:akita:moodle-token') }}
+
+FOO="bar"
