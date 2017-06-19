@@ -29,4 +29,6 @@ export SALESFORCE_CONSUMER_APP=salesforce
 export SALESFORCE_CONSUMER_PASSWORD={{ salt.pillar.get('secrets:akita:salesforce-consumer-password') }}
 export SALESFORCE_IMPORT_NOTIFY_TO=edboardmgmt@plos.org
 
+export JWT_SHARED_SECRET={{ salt.pillar.get('secrets:nedcas:jwt-shared-secret') }}
+
 export MOODLE_TOKEN={{ salt.pillar.get('secrets:akita:moodle-token') }}
