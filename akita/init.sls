@@ -84,6 +84,23 @@ node_requirements:
     - require:
       - user: akita
 
+/var/www/akita/jwt_keys:
+  file.directory:
+    - user: akita
+    - group: akita
+    - require:
+      - user: akita
+      - file: /var/www/akita
+
+# TODO: replace temp key this with Aperta data from vault
+/var/www/akita/jwt_keys/aperta.pub:
+  file.managed:
+    - contents: |
+        -----BEGIN PUBLIC KEY-----
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEvDaJuGUefeKHdMhOEf7viKXXF46r
+        mxZDCOo+mReRgHQZPwzOkYyrP5qNcFz1ZbSjVwYfR6C8o80Mb5Xxww/0Jw==
+        -----END PUBLIC KEY-----
+
 /var/www/akita/.ruby-version:
   file.managed:
     - makedirs: true
