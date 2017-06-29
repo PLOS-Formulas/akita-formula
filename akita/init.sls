@@ -3,6 +3,7 @@
 {% from 'lib/auth_keys.sls' import manage_authorized_keys %}
 {% from 'lib/environment.sls' import environment %}
 {% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
+{% from "akita/map.jinja" import props with context %}
 
 include:
   - nginx
@@ -92,14 +93,14 @@ node_requirements:
       - user: akita
       - file: /var/www/akita
 
-# TODO: replace temp key this with Aperta data from vault
-/var/www/akita/jwt_keys/aperta.pub:
+{% for name,key in props.get('jwt_public_keys').iteritems() %}
+/var/www/akita/jwt_keys/{{ name }}.pub:
   file.managed:
     - contents: |
-        -----BEGIN PUBLIC KEY-----
-        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEvDaJuGUefeKHdMhOEf7viKXXF46r
-        mxZDCOo+mReRgHQZPwzOkYyrP5qNcFz1ZbSjVwYfR6C8o80Mb5Xxww/0Jw==
-        -----END PUBLIC KEY-----
+        {{ key }}
+    - require:
+      - file: /var/www/akita
+{% endfor %}
 
 /var/www/akita/.ruby-version:
   file.managed:
