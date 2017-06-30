@@ -3,6 +3,7 @@
 {% from 'lib/auth_keys.sls' import manage_authorized_keys %}
 {% from 'lib/environment.sls' import environment %}
 {% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
+{% from "akita/map.jinja" import props with context %}
 
 include:
   - nginx
@@ -83,6 +84,23 @@ node_requirements:
     - group: akita
     - require:
       - user: akita
+
+/var/www/akita/jwt_keys:
+  file.directory:
+    - user: akita
+    - group: akita
+    - require:
+      - user: akita
+      - file: /var/www/akita
+
+{% for name,key in props.get('jwt_public_keys').iteritems() %}
+/var/www/akita/jwt_keys/{{ name }}.pub:
+  file.managed:
+    - contents: |
+        {{ key }}
+    - require:
+      - file: /var/www/akita
+{% endfor %}
 
 /var/www/akita/.ruby-version:
   file.managed:

@@ -13,7 +13,17 @@
     'mailer_address': 'localhost',
     'mailer_port': '1025',
     'salesforce_host': 'test.salesforce.com',
-    'salesforce_user': 'akitaintegration@plos.org.plostest2'
+    'salesforce_user': 'akitaintegration@plos.org.plostest2',
+    'jwt_public_keys': {
+      'aperta': '-----BEGIN PUBLIC KEY-----
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEVEinorB7ZuT0zBrgNeQslmrCx09o
+        gC5fsx6/mOvM8zBFGbZZ37bjBuMSJyuuXFSxYhdneI9jANZ7jXwEomQ1Xg==
+        -----END PUBLIC KEY-----',
+      'platform_dev': '-----BEGIN PUBLIC KEY-----
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEvDaJuGUefeKHdMhOEf7viKXXF46r
+        mxZDCOo+mReRgHQZPwzOkYyrP5qNcFz1ZbSjVwYfR6C8o80Mb5Xxww/0Jw==
+        -----END PUBLIC KEY-----'
+    }
   },
   'vagrant': {
     'ned_service': 'http://ned.vagrant.local:8080/v1/',
@@ -51,7 +61,13 @@
     'mailer_address': 'plos-org.mail.protection.outlook.com',
     'mailer_port': '25',
     'salesforce_host': 'login.salesforce.com',
-    'salesforce_user': 'akitaintegration@plos.org'
+    'salesforce_user': 'akitaintegration@plos.org',
+    'jwt_public_keys': {
+      'aperta': '-----BEGIN PUBLIC KEY-----
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcrZ/0MogfOblkHs0OjZNynOC4AVi
+        /iS1uobx8iInzvOMVEewB/Kcx9t56dTWhyrKSPSLeq00+1UVjFYugsPSHQ==
+        -----END PUBLIC KEY-----'
+    }
   }
 }
 , grain='env_complete', base='default') %}
