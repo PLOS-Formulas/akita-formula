@@ -11,6 +11,15 @@ include:
   - common.repos
   - akita.ruby
 
+apt-repo-node-v6:
+  pkgrepo.managed:
+    - name: deb https://deb.nodesource.com/node_6.x trusty main
+    - dist: trusty
+    - file: /etc/apt/sources.list.d/node_v6.list
+    - key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    - keyid: 0x68576280
+    - keyserver: keyserver.ubuntu.com
+
 akita-install-bundler:
   cmd.run:
     - name: chruby-exec {{ ruby_ver }} -- gem install bundler
@@ -71,7 +80,13 @@ akita-apt-packages:
       - libgmp-dev
       - libsqlite3-dev
       - libssl-dev
-      - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
+      # - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
+      - nodejs
+
+yarn:
+  npm.installed
+  - require:
+    - pkg: akita-apt-packages
 
 node_requirements:
   pkg.installed:
