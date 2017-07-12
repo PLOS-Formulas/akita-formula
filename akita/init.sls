@@ -84,7 +84,7 @@ akita-apt-packages:
       - nodejs
 
 yarn:
-  npm.installed
+  npm.installed:
   - require:
     - pkg: akita-apt-packages
 
