@@ -80,7 +80,6 @@ akita-apt-packages:
       - libgmp-dev
       - libsqlite3-dev
       - libssl-dev
-      # - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
       - nodejs
 
 yarn:
