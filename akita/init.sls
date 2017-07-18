@@ -80,7 +80,7 @@ akita-apt-packages:
       - libgmp-dev
       - libsqlite3-dev
       - libssl-dev
-      - nodejs
+      - nodejs: {{ props.get('nodejs_package') }}
 
 yarn:
   npm.installed:
