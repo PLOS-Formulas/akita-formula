@@ -3,12 +3,22 @@
 {% from 'lib/auth_keys.sls' import manage_authorized_keys %}
 {% from 'lib/environment.sls' import environment %}
 {% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
+{% from "akita/map.jinja" import props with context %}
 
 include:
   - nginx
   - common.packages
   - common.repos
   - akita.ruby
+
+apt-repo-node-v6:
+  pkgrepo.managed:
+    - name: deb https://deb.nodesource.com/node_6.x trusty main
+    - dist: trusty
+    - file: /etc/apt/sources.list.d/node_v6.list
+    - key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    - keyid: 0x68576280
+    - keyserver: keyserver.ubuntu.com
 
 akita-install-bundler:
   cmd.run:
@@ -70,7 +80,12 @@ akita-apt-packages:
       - libgmp-dev
       - libsqlite3-dev
       - libssl-dev
-      - nodejs: {{ salt.pillar.get('akita:versions:nodejs') }} # from PLOS apt repo
+      - nodejs: {{ props.get('nodejs_package') }}
+
+yarn:
+  npm.installed:
+  - require:
+    - pkg: akita-apt-packages
 
 node_requirements:
   pkg.installed:
@@ -83,6 +98,23 @@ node_requirements:
     - group: akita
     - require:
       - user: akita
+
+/var/www/akita/jwt_keys:
+  file.directory:
+    - user: akita
+    - group: akita
+    - require:
+      - user: akita
+      - file: /var/www/akita
+
+{% for name,key in props.get('jwt_public_keys').iteritems() %}
+/var/www/akita/jwt_keys/{{ name }}.pub:
+  file.managed:
+    - contents: |
+        {{ key }}
+    - require:
+      - file: /var/www/akita
+{% endfor %}
 
 /var/www/akita/.ruby-version:
   file.managed:
