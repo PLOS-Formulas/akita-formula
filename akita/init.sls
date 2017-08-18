@@ -80,7 +80,7 @@ akita-apt-packages:
       - libgmp-dev
       - libsqlite3-dev
       - libssl-dev
-      - nodejs: {{ props.get('nodejs_package') }}
+      - nodejs  # will install the latest 6.x LTS
 
 yarn:
   npm.installed:
