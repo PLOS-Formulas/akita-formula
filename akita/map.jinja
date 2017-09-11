@@ -8,13 +8,13 @@
 {
   'default':{
     'rails_env': 'development',
-    'nodejs_package': '6.11.1-2nodesource1~trusty1',
     'ned_service': 'http://localhost:8888/v1/',
     'cas_url': 'https://localhost:8880',
     'mailer_address': 'localhost',
     'mailer_port': '1025',
-    'salesforce_host': 'test.salesforce.com',
-    'salesforce_user': 'akitaintegration@plos.org.plostest2',
+    'salesforce_host': 'plos--akitadev.cs14.my.salesforce.com',
+    'salesforce_user': 'akitaintegration@plos.org.akitadev',
+    'salesforce_import_notify_to': 'platform@plos.org',
     'jwt_public_keys': {
       'aperta': '-----BEGIN PUBLIC KEY-----
         MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEVEinorB7ZuT0zBrgNeQslmrCx09o
@@ -61,11 +61,13 @@
     'mailer_port': '25',
     'salesforce_host': 'login.salesforce.com',
     'salesforce_user': 'akitaintegration@plos.org',
+    'salesforce_import_notify_to': 'edboardmgmt@plos.org',
     'jwt_public_keys': {
       'aperta': '-----BEGIN PUBLIC KEY-----
         MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcrZ/0MogfOblkHs0OjZNynOC4AVi
         /iS1uobx8iInzvOMVEewB/Kcx9t56dTWhyrKSPSLeq00+1UVjFYugsPSHQ==
-        -----END PUBLIC KEY-----'
+        -----END PUBLIC KEY-----',
+      'platform_dev': '---public key invalidated!----'
     }
   }
 }

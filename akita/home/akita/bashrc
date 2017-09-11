@@ -26,7 +26,7 @@ export SALESFORCE_USERNAME={{ props.get('salesforce_user') }}
 export SALESFORCE_PASSWORD={{ salt.pillar.get('secrets:akita:salesforce-password') }}
 export SALESFORCE_CONSUMER_APP=salesforce
 export SALESFORCE_CONSUMER_PASSWORD={{ salt.pillar.get('secrets:akita:salesforce-consumer-password') }}
-export SALESFORCE_IMPORT_NOTIFY_TO=edboardmgmt@plos.org
+export SALESFORCE_IMPORT_NOTIFY_TO={{ props.get('salesforce_import_notify_to') }}
 
 export KEYS_DIR=/var/www/akita/jwt_keys/
 export JWT_SHARED_SECRET={{ salt.pillar.get('secrets:nedcas:jwt-shared-secret') }}
