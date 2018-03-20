@@ -1,4 +1,3 @@
-{%- from "lib/git.sls" import github_setup %}
 {% set ruby_ver = salt.pillar.get('akita:versions:ruby') %}
 {% from 'lib/auth_keys.sls' import manage_authorized_keys %}
 {% from 'lib/environment.sls' import environment %}
