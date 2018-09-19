@@ -11,6 +11,7 @@ export NED_PASSWORD={{ salt.pillar.get('secrets:akita:ned-password') }}
 
 export CAS_URL={{ props.get('cas_url') }}
 
+export FROM_EMAIL={{ props.get('from_email') }}
 export MAILER_ADDRESS={{ props.get('mailer_address') }}
 export MAILER_PORT={{ props.get('mailer_port') }}
 export RAILS_ENV={{ props.get('rails_env') }}
