@@ -3,6 +3,7 @@
 {% from 'lib/environment.sls' import environment %}
 {% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
 {% from "akita/map.jinja" import props with context %}
+{% set fqdn = salt['grains.get']('fqdn', 'localhost.localdomain') -%}
 
 include:
   - nginx
@@ -39,7 +40,7 @@ akita:
     - uid: {{ salt.pillar.get('uids:akita:uid') }}
     - gid: {{ salt.pillar.get('uids:akita:gid') }}
     - gid_from_name: true
-{% if grains['fqdn'] == capdeloy_host %}
+{% if fqdn == capdeloy_host %}
     - groups:
       - teamcity
 {% endif %}
@@ -47,7 +48,7 @@ akita:
     - shell: /bin/bash
     - require:
       - group: akita
-{% if grains['fqdn'] == capdeloy_host %}
+{% if fqdn == capdeloy_host %}
       - group: teamcity
 {% endif %}
 
@@ -156,6 +157,21 @@ node_requirements:
     - force: True
     - require:
       - pkg: plos-ruby
+
+akita-advertise:
+  file.serialize:
+    - name: /etc/consul.d/akita.json
+    - formatter: json
+    - dataset:
+        service:
+          name: akita
+          port: 80 
+          checks:
+            - http: 'http://{{ fqdn }}'
+              interval: 10s
+              timeout: 5s
+          tags:
+            - {{ environment }}
 
 {% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
 akita_restart_for_configs:
