@@ -164,7 +164,7 @@ akita-advertise:
     - formatter: json
     - dataset:
         service:
-          name: akita
+          name: akita-exporter
           port: 80 
           checks:
             - http: 'http://{{ fqdn }}'
