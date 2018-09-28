@@ -10,6 +10,7 @@ include:
   - common.packages
   - common.repos
   - akita.ruby
+  - akita.prometheus-exporter
 
 apt-repo-node-v6:
   pkgrepo.managed:
