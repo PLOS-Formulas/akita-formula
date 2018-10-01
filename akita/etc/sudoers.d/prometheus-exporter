@@ -1,0 +1,10 @@
+#
+# This file managed by salt.
+#
+
+Cmnd_Alias PROMETHEUS_EXPORTER = /usr/sbin/service prometheus-exporter restart
+
+prometheus-exporter ALL = (root) NOPASSWD: PROMETHEUS_EXPORTER
+
+# allow to become prometheus-exporter user like so $ sudo -u prometheus-exporter -i
+%akitadevs ALL = (prometheus-exporter) NOPASSWD: /bin/bash

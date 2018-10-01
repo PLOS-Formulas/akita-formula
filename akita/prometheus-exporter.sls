@@ -35,6 +35,11 @@ prometheus-exporter:
       - user: {{ user }}
       - pkg: plos-ruby-{{ ruby_ver }}
 
+/etc/sudoers.d/prometheus-exporter:
+  file.managed:
+    - template: jinja
+    - source: salt://akita/etc/sudoers.d/prometheus-exporter
+
 {{ home }}/.bashrc:
   file.managed:
     - template: jinja
@@ -86,6 +91,7 @@ prometheus-exporter:
 
 {{ app }}-upstart:
   service.running:
+    - name: {{ app }}
     - enable: True
     - require:
       - file: /etc/init/{{ app }}.conf
