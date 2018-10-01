@@ -166,12 +166,9 @@ akita-advertise:
     - formatter: json
     - dataset:
         service:
-          name: 'prometheus-exporter-{{ hostname }}'
+          id: 'akita-exporter-{{ hostname }}'
+          name: 'akita-exporter'
           port: 9394
-          checks:
-            - http: 'http://{{ fqdn }}'
-              interval: 10s
-              timeout: 5s
           tags:
             - {{ environment }}
 
