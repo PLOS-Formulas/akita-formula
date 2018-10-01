@@ -1,5 +1,7 @@
 {% set ruby_ver = salt.pillar.get('akita:prometheus_exporter:ruby') %}
-{% set user = 'prometheus-exporter' %}
+{% set app  = 'prometheus-exporter' %}
+{% set user = app %}
+{% set home = '/home/' ~ user %}
 
 prometheus-exporter:
   group:
@@ -33,21 +35,57 @@ prometheus-exporter:
       - user: {{ user }}
       - pkg: plos-ruby-{{ ruby_ver }}
 
-/home/prometheus-exporter/.bashrc:
+{{ home }}/.bashrc:
   file.managed:
     - template: jinja
-    - name: /home/prometheus-exporter/.bashrc
     - source: salt://akita/home/prometheus-exporter/bashrc
     - require:
-      - user: prometheus-exporter
+      - user: {{ user }} 
 
-/home/prometheus-exporter/.bash_profile:
+{{ home }}/.bash_profile:
   file.managed:
-    - user: prometheus-exporter
-    - group: prometheus-exporter
+    - user: {{ user }}
+    - group: {{ user }}
     - require:
-       - user: prometheus-exporter
+       - user: {{ user }} 
     - contents: |
         if [ -f ~/.bashrc ]; then
           . ~/.bashrc
         fi
+
+{{ home }}/Gemfile:
+  file.managed:
+    - user: {{ user }}
+    - group: {{ user }}
+    - source: salt://akita/home/prometheus-exporter/Gemfile
+    - require:
+      - user: {{ user }} 
+
+{{ home }}/run-prometheus-exporter.sh:
+  file.managed:
+    - user: {{ user }}
+    - group: {{ user }}
+    - mode: 0755
+    - source: salt://akita/home/prometheus-exporter/run-prometheus-exporter.sh
+    - require:
+      - user: {{ user }} 
+
+{{ home }}/akita_collector.rb:
+  file.managed:
+    - user: {{ user }}
+    - group: {{ user }}
+    - source: salt://akita/home/prometheus-exporter/akita_collector.rb
+    - require:
+      - user: {{ user }} 
+
+/etc/init/{{ app }}.conf:
+  file.managed:
+    - source: salt://akita/etc/init/{{ app }}.conf
+    - user: root
+    - group: root
+
+{{ app }}-upstart:
+  service.running:
+    - enable: True
+    - require:
+      - file: /etc/init/{{ app }}.conf
