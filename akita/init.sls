@@ -1,9 +1,10 @@
 {% set ruby_ver = salt.pillar.get('akita:versions:ruby') %}
 {% from 'lib/auth_keys.sls' import manage_authorized_keys %}
 {% from 'lib/environment.sls' import environment %}
-{% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
 {% from "akita/map.jinja" import props with context %}
+{% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
 {% set fqdn = salt['grains.get']('fqdn', 'localhost.localdomain') -%}
+{% set hostname = salt['grains.get']('host', 'localhost') -%}
 
 include:
   - nginx
@@ -165,8 +166,8 @@ akita-advertise:
     - formatter: json
     - dataset:
         service:
-          name: akita-exporter
-          port: 80 
+          name: 'prometheus-exporter-{{ hostname }}'
+          port: 9394
           checks:
             - http: 'http://{{ fqdn }}'
               interval: 10s
