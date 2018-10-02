@@ -66,15 +66,6 @@ prometheus-exporter:
     - require:
       - user: {{ user }} 
 
-{{ home }}/run-prometheus-exporter.sh:
-  file.managed:
-    - user: {{ user }}
-    - group: {{ user }}
-    - mode: 0755
-    - source: salt://akita/home/prometheus-exporter/run-prometheus-exporter.sh
-    - require:
-      - user: {{ user }} 
-
 {{ home }}/akita_collector.rb:
   file.managed:
     - user: {{ user }}
