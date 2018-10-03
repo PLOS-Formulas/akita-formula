@@ -32,6 +32,8 @@
 
 {{ app_home }}/.prometheus-exporter-rc:
   file.managed:
+    - user: {{ user }}
+    - group: {{ user }}
     - template: jinja
     - source: salt://akita/{{ app_home }}/prometheus-exporter-rc
     - require:
