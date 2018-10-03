@@ -20,15 +20,22 @@
   cmd.run:
     - name: chruby-exec {{ ruby_ver }} -- gem install bundler
     - unless: chruby-exec {{ ruby_ver }} -- gem list | grep bundler > /dev/null 2>&1
-    - cwd: {{ app_home }} 
+    - cwd: {{ user_home }} 
     - user: {{ user }}
     - group: {{ user }}
     - env:
-      - HOME: {{ app_home }}
+      - HOME: {{ user_home }}
     - require:
       - user: {{ user }}
       - pkg: plos-ruby-{{ ruby_ver }}
-      - file: {{ app_home }}
+
+{{ user_home }}/Gemfile:
+  file.managed:
+    - user: {{ user }}
+    - group: {{ user }}
+    - source: salt://akita/{{ app_home }}/Gemfile
+    - require:
+      - user: {{ user }} 
 
 {{ app_home }}/.prometheus-exporter-rc:
   file.managed:
@@ -36,15 +43,6 @@
     - group: {{ user }}
     - template: jinja
     - source: salt://akita/{{ app_home }}/prometheus-exporter-rc
-    - require:
-      - user: {{ user }} 
-      - file: {{ app_home }}
-
-{{ app_home }}/Gemfile:
-  file.managed:
-    - user: {{ user }}
-    - group: {{ user }}
-    - source: salt://akita/{{ app_home }}/Gemfile
     - require:
       - user: {{ user }} 
       - file: {{ app_home }}
