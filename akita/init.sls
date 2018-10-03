@@ -166,7 +166,6 @@ akita-advertise:
     - formatter: json
     - dataset:
         service:
-          id: 'akita-exporter-{{ hostname }}'
           name: 'akita-exporter'
           port: 9394
           tags:

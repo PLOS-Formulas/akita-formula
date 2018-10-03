@@ -1,21 +1,15 @@
-{% set ruby_ver = salt.pillar.get('akita:prometheus_exporter:ruby') %}
-{% set app  = 'prometheus-exporter' %}
-{% set user = app %}
-{% set home = '/home/' ~ user %}
+{% set ruby_ver  = salt.pillar.get('akita:prometheus_exporter:ruby') %}
+{% set user      = 'prometheus' %}
+{% set user_home = '/opt/' ~ user %}
+{% set app       = 'prometheus-exporter' %}
+{% set app_home  = user_home ~ '/' ~ app %}
 
-prometheus-exporter:
-  group:
-    - present
-    - gid: {{ salt.pillar.get('uids:prometheus_exporter:gid') }}
-  user:
-    - present
-    - uid: {{ salt.pillar.get('uids:prometheus_exporter:uid') }}
-    - gid: {{ salt.pillar.get('uids:prometheus_exporter:gid') }}
-    - gid_from_name: true
-    - createhome: true
-    - shell: /bin/bash
+{{ app_home }}:
+  file.directory:
+    - user: {{ user }} 
+    - group: {{ user }}
     - require:
-      - group: prometheus-exporter
+      - user: {{ user }}
 
 {{ user }}-ruby-{{ ruby_ver }}:
   pkg:
@@ -26,53 +20,41 @@ prometheus-exporter:
   cmd.run:
     - name: chruby-exec {{ ruby_ver }} -- gem install bundler
     - unless: chruby-exec {{ ruby_ver }} -- gem list | grep bundler > /dev/null 2>&1
-    - cwd: /home/{{ user }}
+    - cwd: {{ app_home }} 
     - user: {{ user }}
     - group: {{ user }}
     - env:
-      - HOME: /home/{{ user }}
+      - HOME: {{ app_home }}
     - require:
       - user: {{ user }}
       - pkg: plos-ruby-{{ ruby_ver }}
+      - file: {{ app_home }}
 
-/etc/sudoers.d/prometheus-exporter:
+{{ app_home }}/.prometheus-exporter-rc:
   file.managed:
     - template: jinja
-    - source: salt://akita/etc/sudoers.d/prometheus-exporter
-
-{{ home }}/.bashrc:
-  file.managed:
-    - template: jinja
-    - source: salt://akita/home/prometheus-exporter/bashrc
+    - source: salt://akita/{{ app_home }}/prometheus-exporter-rc
     - require:
       - user: {{ user }} 
+      - file: {{ app_home }}
 
-{{ home }}/.bash_profile:
+{{ app_home }}/Gemfile:
   file.managed:
     - user: {{ user }}
     - group: {{ user }}
+    - source: salt://akita/{{ app_home }}/Gemfile
     - require:
-       - user: {{ user }} 
-    - contents: |
-        if [ -f ~/.bashrc ]; then
-          . ~/.bashrc
-        fi
+      - user: {{ user }} 
+      - file: {{ app_home }}
 
-{{ home }}/Gemfile:
+{{ app_home }}/akita_collector.rb:
   file.managed:
     - user: {{ user }}
     - group: {{ user }}
-    - source: salt://akita/home/prometheus-exporter/Gemfile
+    - source: salt://akita/{{ app_home }}/akita_collector.rb
     - require:
       - user: {{ user }} 
-
-{{ home }}/akita_collector.rb:
-  file.managed:
-    - user: {{ user }}
-    - group: {{ user }}
-    - source: salt://akita/home/prometheus-exporter/akita_collector.rb
-    - require:
-      - user: {{ user }} 
+      - file: {{ app_home }}
 
 /etc/init/{{ app }}.conf:
   file.managed:
