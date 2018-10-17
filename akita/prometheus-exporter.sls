@@ -1,4 +1,5 @@
-{% set ruby_ver  = '2.3.6' %}
+{% from "akita/map.jinja" import props with context %}
+{% set ruby_ver  = props.get('prometheus_exporter_ruby_ver') %}
 {% set user      = 'prometheus' %}
 {% set user_home = '/opt/' ~ user %}
 {% set app       = 'prometheus-exporter' %}
