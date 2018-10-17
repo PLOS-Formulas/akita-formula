@@ -1,14 +1,17 @@
 {% set ruby_ver = salt.pillar.get('akita:versions:ruby') %}
 {% from 'lib/auth_keys.sls' import manage_authorized_keys %}
 {% from 'lib/environment.sls' import environment %}
-{% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
 {% from "akita/map.jinja" import props with context %}
+{% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
+{% set fqdn = salt['grains.get']('fqdn', 'localhost.localdomain') -%}
+{% set hostname = salt['grains.get']('host', 'localhost') -%}
 
 include:
   - nginx
   - common.packages
   - common.repos
   - akita.ruby
+  - akita.prometheus-exporter
 
 apt-repo-node-v6:
   pkgrepo.managed:
@@ -39,7 +42,7 @@ akita:
     - uid: {{ salt.pillar.get('uids:akita:uid') }}
     - gid: {{ salt.pillar.get('uids:akita:gid') }}
     - gid_from_name: true
-{% if grains['fqdn'] == capdeloy_host %}
+{% if fqdn == capdeloy_host %}
     - groups:
       - teamcity
 {% endif %}
@@ -47,7 +50,7 @@ akita:
     - shell: /bin/bash
     - require:
       - group: akita
-{% if grains['fqdn'] == capdeloy_host %}
+{% if fqdn == capdeloy_host %}
       - group: teamcity
 {% endif %}
 
@@ -156,6 +159,17 @@ node_requirements:
     - force: True
     - require:
       - pkg: plos-ruby
+
+akita-advertise:
+  file.serialize:
+    - name: /etc/consul.d/akita.json
+    - formatter: json
+    - dataset:
+        service:
+          name: 'akita-exporter'
+          port: 9394
+          tags:
+            - {{ environment }}
 
 {% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
 akita_restart_for_configs:
