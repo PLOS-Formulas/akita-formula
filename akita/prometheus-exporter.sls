@@ -1,4 +1,4 @@
-{% set ruby_ver  = salt.pillar.get('akita:prometheus_exporter:ruby') %}
+{% set ruby_ver  = '2.3.6' %}
 {% set user      = 'prometheus' %}
 {% set user_home = '/opt/' ~ user %}
 {% set app       = 'prometheus-exporter' %}
