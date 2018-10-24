@@ -10,6 +10,7 @@ include:
   - nginx
   - common.packages
   - common.repos
+  - akita.memcache
   - akita.ruby
   - akita.prometheus-exporter
 
