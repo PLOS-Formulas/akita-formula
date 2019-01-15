@@ -28,8 +28,7 @@ akita-install-bundler:
     - name: chruby-exec {{ ruby_ver }} -- gem install bundler
     - unless: chruby-exec {{ ruby_ver }} -- gem list | grep bundler > /dev/null 2>&1
     - cwd: /home/akita
-    - user: akita
-    - group: akita
+    - runas: akita
     - require:
       - user: akita
       - pkg: plos-ruby
