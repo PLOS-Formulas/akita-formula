@@ -178,3 +178,19 @@ akita_restart_for_configs:
     - watch:
       - file: /home/akita/.bashrc
 {% endif %}
+
+
+{# Set this grain in dewey for akita host you want to run scheduled import task #}
+{% if salt.grains.get('salesforce-import') %}
+
+/etc/cron.d/akita:
+  file.managed:
+    - source: salt://akita/etc/cron.d/akita
+
+{% else %}
+
+/etc/cron.d/akita:
+  file.absent
+
+{% endif %}
+
