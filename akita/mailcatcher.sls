@@ -9,7 +9,7 @@ install-mailcatcher:
    - unless: chruby-exec {{ ruby_ver }} -- mailcatcher --help
    - runas: root
    - require:
-     - pkg: plos-ruby
+     - pkg: plos-ruby-{{ ruby_ver }}
 
 /etc/init/mailcatcher.conf:
   file.managed:

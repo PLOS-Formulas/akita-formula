@@ -7,6 +7,7 @@
 {% set hostname = salt['grains.get']('host', 'localhost') -%}
 
 include:
+  - lib.ruby
   - nginx
   - common.packages
   - common.repos
@@ -22,16 +23,6 @@ apt-repo-node-v6:
     - key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     - keyid: 0x68576280
     - keyserver: keyserver.ubuntu.com
-
-akita-install-bundler:
-  cmd.run:
-    - name: chruby-exec {{ ruby_ver }} -- gem install bundler
-    - unless: chruby-exec {{ ruby_ver }} -- gem list | grep bundler > /dev/null 2>&1
-    - cwd: /home/akita
-    - runas: akita
-    - require:
-      - user: akita
-      - pkg: plos-ruby
 
 akita:
   group:
@@ -158,7 +149,7 @@ node_requirements:
     - target: /opt/rubies/ruby-{{ ruby_ver }}/bin/rake
     - force: True
     - require:
-      - pkg: plos-ruby
+      - pkg: plos-ruby-{{ ruby_ver }}
 
 akita-advertise:
   file.serialize:
