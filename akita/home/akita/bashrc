@@ -7,7 +7,7 @@ chruby {{ salt.pillar.get('akita:versions:ruby') }}
 
 export NED_SERVICE={{ props.get('ned_service') }}
 export NED_USERAPP=akita
-export NED_PASSWORD={{ salt.pillar.get('secrets:akita:ned-password') }}
+export NED_PASSWORD='{{ salt.pillar.get('secrets:akita:ned-password') }}'
 
 export CAS_URL={{ props.get('cas_url') }}
 
@@ -24,9 +24,9 @@ export SALESFORCE_HOST={{ props.get('salesforce_host') }}
 export SALESFORCE_CLIENT_ID={{ salt.pillar.get('secrets:akita:salesforce-client-id') }}
 export SALESFORCE_CLIENT_SECRET={{ salt.pillar.get('secrets:akita:salesforce-client-secret') }}
 export SALESFORCE_USERNAME={{ props.get('salesforce_user') }}
-export SALESFORCE_PASSWORD={{ salt.pillar.get('secrets:akita:salesforce-password') }}
+export SALESFORCE_PASSWORD='{{ salt.pillar.get('secrets:akita:salesforce-password') }}'
 export SALESFORCE_CONSUMER_APP=salesforce
-export SALESFORCE_CONSUMER_PASSWORD={{ salt.pillar.get('secrets:akita:salesforce-consumer-password') }}
+export SALESFORCE_CONSUMER_PASSWORD='{{ salt.pillar.get('secrets:akita:salesforce-consumer-password') }}'
 export SALESFORCE_IMPORT_NOTIFY_TO={{ props.get('salesforce_import_notify_to') }}
 
 export KEYS_DIR=/var/www/akita/jwt_keys/
