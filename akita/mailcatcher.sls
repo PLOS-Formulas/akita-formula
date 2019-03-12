@@ -7,9 +7,9 @@ install-mailcatcher:
   cmd.run:
    - name: chruby-exec {{ ruby_ver }} -- gem install mailcatcher
    - unless: chruby-exec {{ ruby_ver }} -- mailcatcher --help
-   - user: root
+   - runas: root
    - require:
-     - pkg: plos-ruby
+     - pkg: plos-ruby-{{ ruby_ver }}
 
 /etc/init/mailcatcher.conf:
   file.managed:

@@ -22,8 +22,7 @@
     - name: chruby-exec {{ ruby_ver }} -- gem install bundler
     - unless: chruby-exec {{ ruby_ver }} -- gem list | grep bundler > /dev/null 2>&1
     - cwd: {{ user_home }} 
-    - user: {{ user }}
-    - group: {{ user }}
+    - runas: {{ user }}
     - env:
       - HOME: {{ user_home }}
     - require:
