@@ -5,6 +5,7 @@
 {% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
 {% set fqdn = salt['grains.get']('fqdn', 'localhost.localdomain') -%}
 {% set hostname = salt['grains.get']('host', 'localhost') -%}
+{% set oscodename = salt.grains.get('oscodename') %}
 
 include:
   - lib.ruby
@@ -74,6 +75,12 @@ akita-apt-packages:
       - libsqlite3-dev
       - libssl-dev
       - nodejs  # will install the latest 6.x LTS
+      {% if oscodename == 'bionic' %}
+      - node-gyp
+      - nodejs-dev
+      - libssl1.0-dev
+      - npm
+      {% endif %}
 
 yarn:
   npm.installed:

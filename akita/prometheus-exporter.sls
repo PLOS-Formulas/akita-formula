@@ -19,7 +19,7 @@
 
 {{ user }}-install-bundler-{{ ruby_ver }}:
   cmd.run:
-    - name: chruby-exec {{ ruby_ver }} -- gem install bundler
+    - name: chruby-exec {{ ruby_ver }} -- gem install bundler -v 1.17.3
     - unless: chruby-exec {{ ruby_ver }} -- gem list | grep bundler > /dev/null 2>&1
     - cwd: {{ user_home }} 
     - runas: {{ user }}
