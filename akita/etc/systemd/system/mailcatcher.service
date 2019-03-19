@@ -1,0 +1,12 @@
+[Unit]
+Description=Mailcatcher
+Requires=network.target
+
+[Service]
+Type=simple
+User= akita
+Group=akita
+ExecStart=/bin/bash -lc 'chruby-exec {{ salt.pillar.get('akita:versions:ruby') }} -- mailcatcher -f --ip 0.0.0.0'
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=Akita prometheus exporter
+Requires=network.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+Environment="HOME={{ home }}"
+EnvironmentFile=/opt/prometheus/prometheus-exporter/.prometheus-exporter-rc
+WorkingDirectory={{ home }}
+ExecStartPre=/bin/bash if ! gem list prometheus_exporter -i; then cd $HOME && bundle install; fi
+ExecStart=/bin/bash -lc 'prometheus_exporter -v -c prometheus-exporter/akita_collector.rb --prefix akita_'
+
+[Install]
+WantedBy=multi-user.target

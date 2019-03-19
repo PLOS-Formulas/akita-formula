@@ -1,4 +1,5 @@
 {% set ruby_ver = salt.pillar.get('akita:versions:ruby') %}
+{% set oscodename = salt.grains.get('oscodename') %}
 
 include:
   - akita.ruby
@@ -11,6 +12,7 @@ install-mailcatcher:
    - require:
      - pkg: plos-ruby-{{ ruby_ver }}
 
+{% if oscodename == 'trusty' %}
 /etc/init/mailcatcher.conf:
   file.managed:
     - template: jinja
@@ -23,3 +25,16 @@ mailcatcher:
     - enable: True
     - require:
       - file: /etc/init/mailcatcher.conf
+{% else %}
+mailcatcher-unit-file:
+  file.managed:
+    - name: /etc/systemd/system/mailcatcher.service
+    - source: salt://akita/etc/systemd/system/mailcatcher.service
+
+mailcatcher-service:
+  service.running:
+    - name: mailcatcher
+    - enable: True
+    - require:
+      - file: /etc/systemd/system/mailcatcher.service
+{%endif%}
