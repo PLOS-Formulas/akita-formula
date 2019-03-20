@@ -16,6 +16,7 @@ include:
   - akita.ruby
   - akita.prometheus-exporter
 
+{% if oscodename == "trusty" %}
 apt-repo-node-v6:
   pkgrepo.managed:
     - name: deb https://deb.nodesource.com/node_6.x trusty main
@@ -24,6 +25,7 @@ apt-repo-node-v6:
     - key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     - keyid: 0x68576280
     - keyserver: keyserver.ubuntu.com
+{% endif %}
 
 akita:
   group:
@@ -74,8 +76,8 @@ akita-apt-packages:
       - libgmp-dev
       - libsqlite3-dev
       - libssl-dev
-      - nodejs  # will install the latest 6.x LTS
-      {% if oscodename == 'bionic' %}
+      - nodejs
+      {% if oscodename == 'bionic' -%}
       - node-gyp
       - nodejs-dev
       - libssl1.0-dev
