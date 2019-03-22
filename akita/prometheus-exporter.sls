@@ -4,6 +4,7 @@
 {% set user_home = '/opt/' ~ user %}
 {% set app       = 'prometheus-exporter' %}
 {% set app_home  = user_home ~ '/' ~ app %}
+{% set oscodename = salt.grains.get('oscodename') %}
 
 {{ app_home }}:
   file.directory:
@@ -19,7 +20,7 @@
 
 {{ user }}-install-bundler-{{ ruby_ver }}:
   cmd.run:
-    - name: chruby-exec {{ ruby_ver }} -- gem install bundler
+    - name: chruby-exec {{ ruby_ver }} -- gem install bundler -v 1.17.3
     - unless: chruby-exec {{ ruby_ver }} -- gem list | grep bundler > /dev/null 2>&1
     - cwd: {{ user_home }} 
     - runas: {{ user }}
@@ -56,6 +57,7 @@
       - user: {{ user }} 
       - file: {{ app_home }}
 
+{%- if oscodename == 'trusty' %}
 /etc/init/{{ app }}.conf:
   file.managed:
     - source: salt://akita/etc/init/{{ app }}.conf
@@ -68,3 +70,20 @@
     - enable: True
     - require:
       - file: /etc/init/{{ app }}.conf
+{%- else %}
+akita-exporter-unit-file:
+  file.managed:
+    - name: /etc/systemd/system/akita-exporter.service
+    - source: salt://akita/etc/systemd/system/akita-exporter.service
+    - template: jinja
+    - defaults:
+      home: {{ user_home }}
+
+akita-exporter-service:
+  service.running:
+    - name: akita-exporter
+    - enable: True
+    - require:
+      - file: /etc/systemd/system/akita-exporter.service
+{%- endif %}
+
