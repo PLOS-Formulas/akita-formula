@@ -174,7 +174,7 @@ akita-advertise:
           tags:
             - {{ environment }}
 
-{% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
+{% if salt['file.file_exists' ]("/etc/init/akita.conf") and oscodename == 'trusty' %}
 akita_restart_for_configs:
   service.running:
     - name: akita
