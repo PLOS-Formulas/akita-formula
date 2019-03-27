@@ -1,0 +1,14 @@
+[Unit]
+Description=Akita/puma
+Requires=network.target
+
+[Service]
+Type=simple
+Environment="HOME=/home/akita"
+User=akita
+Group=akita
+WorkingDirectory=/var/www/akita/current
+ExecStart=/bin/bash -lc 'exec "$0"' bundle exec puma -C /var/www/akita/shared/puma.rb
+
+[Install]
+WantedBy=multi-user.target

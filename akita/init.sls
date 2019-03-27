@@ -177,4 +177,14 @@ akita_restart_for_configs:
     - name: akita
     - watch:
       - file: /home/akita/.bashrc
+{% elif oscodename == 'bionic' %}
+akita-service-file:
+  file.managed:
+    - source: salt://akita/etc/systemd/system/akita.service
+    - name: /etc/systemd/system/akita.service
+
+akita-systemd-service:
+  service.running:
+    - name: akita
+    - enable: true
 {% endif %}
