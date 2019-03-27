@@ -6,9 +6,12 @@
 {% set fqdn = salt['grains.get']('fqdn', 'localhost.localdomain') -%}
 {% set hostname = salt['grains.get']('host', 'localhost') -%}
 {% set oscodename = salt.grains.get('oscodename') %}
+{% from 'akita/akita_env.jinja' import akita_env with context %}
+{% from 'lib/rails.sls' import rails_init %}
 
 include:
   - lib.ruby
+  - lib.rails
   - nginx
   - common.packages
   - common.repos
@@ -177,4 +180,6 @@ akita_restart_for_configs:
     - name: akita
     - watch:
       - file: /home/akita/.bashrc
+{% elif oscodename == 'bionic' %}
+{{ rails_init(app_name='akita', service_name='nac', runas="akita", cmd="bundle exec puma -C /var/www/akita/shared/puma.rb", env_vars=akita_env) }}
 {% endif %}
