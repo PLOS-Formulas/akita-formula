@@ -7,9 +7,8 @@ Type=simple
 User=prometheus
 Group=prometheus
 Environment="HOME={{ home }}"
-EnvironmentFile=/opt/prometheus/prometheus-exporter/.prometheus-exporter-rc
 WorkingDirectory={{ home }}
-ExecStart=/bin/bash -lc 'prometheus_exporter -v -c prometheus-exporter/akita_collector.rb --prefix akita_'
+ExecStart=/usr/local/bin/ruby-service $HOME %p bundle exec puma -C prometheus-exporter/akita_collector.rb --prefix akita_
 
 [Install]
 WantedBy=multi-user.target
