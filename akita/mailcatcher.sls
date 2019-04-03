@@ -31,6 +31,7 @@ mailcatcher-unit-file:
   file.managed:
     - name: /etc/systemd/system/mailcatcher.service
     - source: salt://akita/etc/systemd/system/mailcatcher.service
+    - template: jinja
 
 mailcatcher-service:
   service.running:
