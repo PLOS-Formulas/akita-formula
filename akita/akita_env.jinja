@@ -1,0 +1,27 @@
+{% from 'akita/map.jinja' import props with context %}
+{% set akita_env = 
+{
+    'NED_SERVICE': props.get('ned_service'),
+    'NED_USERAPP': 'akita',
+    'NED_PASSWORD': salt.pillar.get('secrets:akita:ned-password'),
+    'CAS_URL': props.get('cas_url'),
+    'FROM_EMAIL': props.get('from_email'),
+    'MAILER_ADDRESS': props.get('mailer_address'),
+    'MAILER_PORT': props.get('mailer_port'),
+    'RAILS_ENV': props.get('rails_env'),
+    'SECRET_KEY_BASE': salt.pillar.get('secrets:akita:rails-secret'),
+    'EXACTTARGET_ID': salt.pillar.get('secrets:akita:exact-target-id'),
+    'EXACTTARGET_SECRET': salt.pillar.get('secrets:akita:exact-target-secret'),
+    'SALESFORCE_HOST': props.get('salesforce_host'),
+    'SALESFORCE_CLIENT_ID': salt.pillar.get('secrets:akita:salesforce-client-id'),
+    'SALESFORCE_CLIENT_SECRET': salt.pillar.get('secrets:akita:salesforce-client-secret'),
+    'SALESFORCE_USERNAME': props.get('salesforce_user'),
+    'SALESFORCE_PASSWORD': salt.pillar.get('secrets:akita:salesforce-password'),
+    'SALESFORCE_CONSUMER_APP': 'salesforce',
+    'SALESFORCE_CONSUMER_PASSWORD': salt.pillar.get('secrets:akita:salesforce-consumer-password'),
+    'SALESFORCE_IMPORT_NOTIFY_TO': props.get('salesforce_import_notify_to'),
+    'KEYS_DIR': '/var/www/akita/jwt_keys/',
+    'JWT_SHARED_SECRET': salt.pillar.get('secrets:nedcas:jwt-shared-secret'),
+    'MOODLE_TOKEN': salt.pillar.get('secrets:akita:moodle-token'),
+}
+%}

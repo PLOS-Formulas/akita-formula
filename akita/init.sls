@@ -5,9 +5,13 @@
 {% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
 {% set fqdn = salt['grains.get']('fqdn', 'localhost.localdomain') -%}
 {% set hostname = salt['grains.get']('host', 'localhost') -%}
+{% set oscodename = salt.grains.get('oscodename') %}
+{% from 'akita/akita_env.jinja' import akita_env with context %}
+{% from 'lib/rails.sls' import rails_init %}
 
 include:
   - lib.ruby
+  - lib.rails
   - nginx
   - common.packages
   - common.repos
@@ -15,6 +19,7 @@ include:
   - akita.ruby
   - akita.prometheus-exporter
 
+{% if oscodename == "trusty" %}
 apt-repo-node-v6:
   pkgrepo.managed:
     - name: deb https://deb.nodesource.com/node_6.x trusty main
@@ -23,6 +28,7 @@ apt-repo-node-v6:
     - key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     - keyid: 0x68576280
     - keyserver: keyserver.ubuntu.com
+{% endif %}
 
 akita:
   group:
@@ -73,7 +79,13 @@ akita-apt-packages:
       - libgmp-dev
       - libsqlite3-dev
       - libssl-dev
-      - nodejs  # will install the latest 6.x LTS
+      - nodejs
+      {% if oscodename == 'bionic' -%}
+      - node-gyp
+      - nodejs-dev
+      - libssl1.0-dev
+      - npm
+      {% endif %}
 
 yarn:
   npm.installed:
@@ -162,10 +174,12 @@ akita-advertise:
           tags:
             - {{ environment }}
 
-{% if salt['file.file_exists' ]("/etc/init/akita.conf") %}
+{% if salt['file.file_exists' ]("/etc/init/akita.conf") and oscodename == 'trusty' %}
 akita_restart_for_configs:
   service.running:
     - name: akita
     - watch:
       - file: /home/akita/.bashrc
+{% elif oscodename == 'bionic' %}
+{{ rails_init(app_name='akita', service_name='nac', runas="akita", cmd="bundle exec puma -C /var/www/akita/shared/puma.rb", env_vars=akita_env) }}
 {% endif %}
