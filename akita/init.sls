@@ -1,6 +1,6 @@
 {% set ruby_ver = salt.pillar.get('akita:versions:ruby') %}
 {% from 'lib/auth_keys.sls' import manage_authorized_keys %}
-{% from 'lib/environment.sls' import environment %}
+{% set environment = salt.grains.get('environment') %}
 {% from "akita/map.jinja" import props with context %}
 {% set capdeloy_host = salt['pillar.get']('environment:' ~ environment ~ ':capdeploy', 'None') %}
 {% set fqdn = salt['grains.get']('fqdn', 'localhost.localdomain') -%}

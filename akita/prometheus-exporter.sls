@@ -85,6 +85,15 @@ akita-exporter-service:
     - name: akita-exporter
     - enable: True
     - require:
-      - file: /etc/systemd/system/akita-exporter.service
+      - akita-exporter-unit-file
+      - akita-exporter-start-script
+
+akita-exporter-start-script:
+  file.managed:
+    - name: {{ app_home }}/start-akita-exporter.sh
+    - source: salt://akita/{{ app_home }}/start-akita-exporter.sh
+    - user: {{ user }}
+    - group: {{ user }}
+    - mode: 744
 {%- endif %}
 
