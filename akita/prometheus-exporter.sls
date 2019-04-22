@@ -94,6 +94,6 @@ akita-exporter-start-script:
     - source: salt://akita/{{ app_home }}/start-akita-exporter.sh
     - user: {{ user }}
     - group: {{ user }}
-    - mode: 744
+    - mode: 755
 {%- endif %}
 

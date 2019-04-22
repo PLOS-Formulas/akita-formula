@@ -8,7 +8,7 @@ User=prometheus
 Group=prometheus
 Environment="HOME={{ home }}"
 WorkingDirectory={{ home }}
-ExecStart=/bin/bash -c '{{ home }}/prometheus-exporter/start-akita-exporter.sh'
+ExecStart={{ home }}/prometheus-exporter/start-akita-exporter.sh
 
 [Install]
 WantedBy=multi-user.target
