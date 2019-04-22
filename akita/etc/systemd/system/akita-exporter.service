@@ -8,7 +8,7 @@ User=prometheus
 Group=prometheus
 Environment="HOME={{ home }}"
 WorkingDirectory={{ home }}
-ExecStart=/usr/local/bin/ruby-service $HOME %p bundle exec puma -C prometheus-exporter/akita_collector.rb --prefix akita_
+ExecStart={{ home }}/prometheus-exporter/start-akita-exporter.sh
 
 [Install]
 WantedBy=multi-user.target
