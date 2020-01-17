@@ -11,7 +11,7 @@ include:
 remove-nginx:
   pkg.removed:
     - name: nginx
-    
+
 
 akita-network:
   docker_network.present:
@@ -34,7 +34,7 @@ prometheus-exporter-conf-file:
     - source: salt://akita/opt/prometheus/prometheus-exporter/akita_collector.rb
     - mode: 0644
     - makedirs: True
-    
+
 prometheus-exporter-gem-file:
   file.managed:
     - name: /opt/prometheus/prometheus-exporter/Gemfile
@@ -56,7 +56,7 @@ prometheus-exporter-container-running:
     - binds:
       - /opt/prometheus/prometheus-exporter/Gemfile:/Gemfile
       - /opt/prometheus/prometheus-exporter/akita_collector.rb:/akita_collector.rb
-    
+
 # akita container
 
 {% for name,key in props.get('jwt_public_keys').iteritems() %}
@@ -83,7 +83,7 @@ containers-absent:
     - names:
       - app
       - web
-      
+
 assets-volume-absent:
   docker_volume.absent:
     - onchanges:
@@ -91,11 +91,11 @@ assets-volume-absent:
     - require:
       - containers-absent
     - name: emberassets
-    
+
 nginx-conf-volume:
   docker_volume.present:
     - name: nginxconf
-    
+
 nginx-conf-volume-absent:
   docker_volume.absent:
     - onchanges:
@@ -103,11 +103,11 @@ nginx-conf-volume-absent:
     - require:
       - containers-absent
     - name: nginxconf
-    
+
 assets-volume:
   docker_volume.present:
     - name: emberassets
-    
+
 app-container-running:
   docker_container.running:
     - name: app
@@ -149,15 +149,15 @@ web-container-running:
       - app-container-running
 
 {% if environment != 'prod' %}
-  # mailcatcher container
+# mailcatcher container
 
-  mailcatcher-container-running:
-    docker_container.running:
-      - name: mailcatcher
-      - image: schickling/mailcatcher
-      - port_bindings:
-        - 1080:1080
-      - networks:
-        - akita
+mailcatcher-container-running:
+  docker_container.running:
+    - name: mailcatcher
+    - image: schickling/mailcatcher
+    - port_bindings:
+      - 1080:1080
+    - networks:
+      - akita
 
 {% endif %}
