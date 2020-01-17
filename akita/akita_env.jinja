@@ -8,6 +8,7 @@
     'FROM_EMAIL': props.get('from_email'),
     'MAILER_ADDRESS': props.get('mailer_address'),
     'MAILER_PORT': props.get('mailer_port'),
+    'MEMCACHED_HOST': props.get('memcached_host'),
     'RAILS_ENV': props.get('rails_env'),
     'SECRET_KEY_BASE': salt.pillar.get('secrets:akita:rails-secret'),
     'EXACTTARGET_ID': salt.pillar.get('secrets:akita:exact-target-id'),
