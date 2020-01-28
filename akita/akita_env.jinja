@@ -1,5 +1,5 @@
 {% from 'akita/map.jinja' import props with context %}
-{% set akita_env = 
+{% set akita_env =
 {
     'NED_SERVICE': props.get('ned_service'),
     'NED_USERAPP': 'akita',
@@ -9,6 +9,7 @@
     'MAILER_ADDRESS': props.get('mailer_address'),
     'MAILER_PORT': props.get('mailer_port'),
     'MEMCACHED_HOST': props.get('memcached_host'),
+    'PROMETHEUS_EXPORTER_URL': props.get('prometheus_exporter_url'),
     'RAILS_ENV': props.get('rails_env'),
     'SECRET_KEY_BASE': salt.pillar.get('secrets:akita:rails-secret'),
     'EXACTTARGET_ID': salt.pillar.get('secrets:akita:exact-target-id'),
