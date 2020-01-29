@@ -7,7 +7,7 @@
 {% set props = salt['grains.filter_by'](
 {
   'default':{
-    'tag': 'NAC-362-dockerize',
+    'tag': 'dev',
     'memcached_host': 'memcached',
     'prometheus_exporter_ruby_ver': '2.3.6',
     'prometheus_exporter_url': 'http://prometheus-exporter:9394',
@@ -52,6 +52,7 @@
     'cas_url': 'https://nedcas-integration.plos.org'
   },
   'stage': {
+    'tag': 'stage',
     'rails_env': 'integration',
     'ned_service': 'http://ned-401.soma.plos.org:8080/v1/',
     'cas_url': 'https://nedcas-stage.plos.org',
@@ -59,6 +60,7 @@
     'mailer_port': '25'
   },
   'prod': {
+    'tag': 'prod',
     'rails_env': 'production',
     'ned_service': 'http://ned.soma.plos.org/v1',
     'cas_url': 'https://register.plos.org',
