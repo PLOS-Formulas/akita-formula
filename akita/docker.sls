@@ -1,8 +1,7 @@
 {% from "akita/map.jinja" import props with context %}
 {% from 'akita/akita_env.jinja' import akita_env with context %}
 {% set environment = salt.grains.get('environment') %}
-{% set docker0 = salt.network.ip_addrs('docker0') %}
-{% set docker_dns = '172.17.0.1' if not docker0 else docker0[0] %}
+{% set docker_dns = '10.5.2.240,10.136.1.30' %}
 
 include:
   - docker
@@ -46,8 +45,7 @@ prometheus-exporter-container-running:
   docker_container.running:
     - name: prometheus-exporter
     - image: ruby:2.3
-    - dns:
-      - {{ docker_dns }}
+    - dns: {{ docker_dns }}
     - networks:
       - akita
     - cmd: bin/bash -c "bundle install; bundle exec prometheus_exporter -v -c akita_collector.rb --prefix akita_"
