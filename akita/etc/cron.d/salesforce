@@ -1,0 +1,6 @@
+MAILTO=dev@plos.org
+SHELL=/bin/bash
+HOME=/home/root
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+0 0 * * 1-5 root chronic docker exec app rake salesforce:import_users
