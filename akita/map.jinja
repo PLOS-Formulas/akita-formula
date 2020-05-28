@@ -7,11 +7,14 @@
 {% set props = salt['grains.filter_by'](
 {
   'default':{
+    'tag': 'dev',
+    'memcached_host': 'memcached',
     'prometheus_exporter_ruby_ver': '2.3.6',
+    'prometheus_exporter_url': 'http://prometheus-exporter:9394',
     'rails_env': 'development',
     'ned_service': 'http://localhost:8888/v1/',
     'cas_url': 'https://localhost:8880',
-    'mailer_address': 'localhost',
+    'mailer_address': 'mailcatcher',
     'from_email': 'no-reply@plos.org',
     'mailer_port': '1025',
     'salesforce_host': 'plos--akitadev.cs14.my.salesforce.com',
@@ -49,6 +52,7 @@
     'cas_url': 'https://nedcas-integration.plos.org'
   },
   'stage': {
+    'tag': 'stage',
     'rails_env': 'integration',
     'ned_service': 'http://ned-401.soma.plos.org:8080/v1/',
     'cas_url': 'https://nedcas-stage.plos.org',
@@ -56,6 +60,7 @@
     'mailer_port': '25'
   },
   'prod': {
+    'tag': 'prod',
     'rails_env': 'production',
     'ned_service': 'http://ned.soma.plos.org/v1',
     'cas_url': 'https://register.plos.org',
