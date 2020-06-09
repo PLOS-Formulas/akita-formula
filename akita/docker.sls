@@ -22,6 +22,13 @@ memcached-container-running:
   docker_container.running:
     - name: memcached
     - image: memcached:1.5.20
+    - log_driver: syslog
+    - log_opt: 
+      - syslog-address: udp://127.0.0.1:514
+      {% raw %}
+      - tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      {% endraw %}
+      - syslog-format: rfc5424
     - networks:
       - akita
 
@@ -51,6 +58,13 @@ prometheus-exporter-container-running:
     - cmd: bin/bash -c "bundle install; bundle exec prometheus_exporter -v -c akita_collector.rb --prefix akita_"
     - port_bindings:
       - 9394:9394
+    - log_driver: syslog
+    - log_opt: 
+      - syslog-address: udp://127.0.0.1:514
+      {% raw %}
+      - tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      {% endraw %}
+      - syslog-format: rfc5424
     - binds:
       - /opt/prometheus/prometheus-exporter/Gemfile:/Gemfile
       - /opt/prometheus/prometheus-exporter/akita_collector.rb:/akita_collector.rb
@@ -118,6 +132,13 @@ app-container-running:
       - emberassets:/code/frontend/dist
       - nginxconf:/code/docker/web/conf/nginx/conf.d
       - /var/www/akita/jwt_keys:/var/www/akita/jwt_keys
+    - log_driver: syslog  
+    - log_opt: 
+      - syslog-address: udp://127.0.0.1:514
+      {% raw %}
+      - tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      {% endraw %}
+      - syslog-format: rfc5424  
     - require:
       - akita-image
       - akita-network
@@ -140,6 +161,13 @@ web-container-running:
       - 80:8080
     - networks:
       - akita
+    - log_driver: syslog  
+    - log_opt: 
+      - syslog-address: udp://127.0.0.1:514
+      {% raw %}
+      - tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      {% endraw %}
+      - syslog-format: rfc5424  
     - binds:
       - emberassets:/code/frontend/dist
       - /opt/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
@@ -153,6 +181,13 @@ mailcatcher-container-running:
   docker_container.running:
     - name: mailcatcher
     - image: schickling/mailcatcher
+    - log_driver: syslog
+    - log_opt: 
+      - syslog-address: udp://127.0.0.1:514
+      {% raw %}
+      - tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      {% endraw %}
+      - syslog-format: rfc5424
     - port_bindings:
       - 1080:1080
     - networks:
