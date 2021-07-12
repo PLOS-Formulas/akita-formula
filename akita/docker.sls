@@ -1,7 +1,7 @@
 {% from "akita/map.jinja" import props with context %}
 {% from 'akita/akita_env.jinja' import akita_env with context %}
 {% set environment = salt.grains.get('environment') %}
-{% set docker_dns = '10.5.2.240,10.136.1.30' %}
+{% set docker_dns = '10.136.1.37,10.20.0.9' %}
 
 include:
   - docker
